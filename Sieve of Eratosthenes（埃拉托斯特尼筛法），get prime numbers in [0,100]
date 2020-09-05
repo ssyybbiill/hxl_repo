@@ -1,0 +1,36 @@
+import numpy as np
+
+
+# 用 Sieve of Eratosthenes（埃拉托斯特尼筛法），打印【0,100】之间的所有质数。
+def way1():  # 方法一，用prime数组，两层for循环一个一个标记
+    arr = np.arange(2, 101)
+    prime = np.ones(len(arr), dtype=bool)
+
+    for i in range(2, len(arr)):  # 被除数
+        for j in range(i - 1, len(arr)):  # 下标
+
+            if arr[j] % i == 0:
+                prime[j] = False
+
+    return arr[prime]
+
+
+def way2():  # 方法二，用arr[arr % i != 0]，整个数组一起判断，只对比当前被除数大的数据做取模计算，删除非质数，最后连接上比当前数据小的质数。
+    arr = np.arange(2, 101)
+
+    for i in range(2, 101):
+        arr_tmp = arr[arr > i]
+        tmp_start = len(arr) - len(arr_tmp)  # 找到第一个大于i的数的下标
+        # you may don't tag, just delete in-prime ones.
+        new_arr_tmp = arr_tmp[arr_tmp % i != 0]
+        # print(type(new_arr_tmp))  # 看类型，是ndarray，所以不能用list的方法“+”直接相连接
+        arr = np.concatenate((arr[0:tmp_start], new_arr_tmp))  # 连接两个ndarray方法
+    return arr
+
+
+if __name__ == '__main__':
+    arr1 = way1()
+    arr2 = way2()
+    # 方法二比方法一巧妙得多，我想的！
+    print(arr1, "len:", len(arr1))
+    print(arr2, "len:", len(arr2))
